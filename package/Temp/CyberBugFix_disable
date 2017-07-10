@@ -1,0 +1,9 @@
+IF EXISTS SYSTEMDIR:C/CyberBugFix
+  Rename SYSTEMDIR:C/CyberBugFix SYSTEMDIR:C/CyberBugFix_disabled
+  IF EXISTS SYSTEMDIR:Prefs/Env-Archive/FBlit.cfg
+    SYSTEMDIR:Prefs/Env-Archive
+    Copy FBlit.cfg SYSTEMDIR:System/FBlit/FBlit_cgx.cfg
+    Copy SYSTEMDIR:System/FBlit/FBlit_orig.cfg FBlit.cfg
+  EndIF
+ELSE
+EndIF

@@ -1,0 +1,13 @@
+IF EXISTS SYSTEMDIR:WBStartup/MyClock
+  SYSTEMDIR:System/MyClock/Enable
+  Copy SYSTEMDIR:WBStartup/MyClock WBStartup
+  Copy SYSTEMDIR:WBStartup/MyClock.info WBStartup
+  Delete >NIL: SYSTEMDIR:WBStartup/MyClock
+  Delete >NIL: SYSTEMDIR:WBStartup/MyClock.info
+  Echo ""
+  Echo "MyClock is now disabled - please reboot"
+ELSE
+  Echo ""
+  Echo "ERROR - MyClock is already disabled"
+EndIF
+Wait 1

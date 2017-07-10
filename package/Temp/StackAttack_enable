@@ -1,0 +1,4 @@
+IF EXISTS DH1:C/StackAttack_disabled
+  Rename DH1:C/StackAttack_disabled DH1:C/StackAttack
+ELSE
+EndIF

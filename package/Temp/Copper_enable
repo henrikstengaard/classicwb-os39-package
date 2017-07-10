@@ -1,0 +1,17 @@
+IF NOT EXISTS SYSTEMDIR:WBStartup/Copper
+  SYSTEMDIR:System/Copper/Disable
+  Copy SYSTEMDIR:Prefs/Env-Archive/Sys/wbpattern.prefs Prefs/Env-Archive/Sys/wbpattern.prefs
+  Copy SYSTEMDIR:Prefs/Env-Archive/Sys/wbconfig.prefs Prefs/Env-Archive/Sys/wbconfig.prefs
+  Copy SYSTEMDIR:Prefs/Env-Archive/Sys/font.prefs Prefs/Env-Archive/Sys/font.prefs
+  Copy SYSTEMDIR:Prefs/Env-Archive/Sys/fullpalette.prefs Prefs/Env-Archive/Sys/fullpalette.prefs
+  Copy SYSTEMDIR:Prefs/Env-Archive/Sys/palette.prefs Prefs/Env-Archive/Sys/palette.prefs
+  Copy SYSTEMDIR:Prefs/Env-Archive/MagicMenu.prefs Prefs/Env-Archive/MagicMenu.prefs
+  Copy SYSTEMDIR:Prefs/Env-Archive/PopupMenu.cfg Prefs/Env-Archive/PopupMenu.cfg
+  SYSTEMDIR:System/Copper/Enable
+  Copy >NIL:  #? SYS: ALL
+  IF EXISTS SYSTEMDIR:BorderBlank
+    Rename SYSTEMDIR:BorderBlank SYSTEMDIR:BorderBlank_disabled
+  EndIF
+ELSE
+EndIF
+Wait 1
