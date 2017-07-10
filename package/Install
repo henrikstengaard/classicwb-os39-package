@@ -1,0 +1,54 @@
+; ClassicWB OS39 v28 Package Install Script
+; -----------------------------------------
+;
+; Author: Henrik Noerfjand Stengaard 
+; Date: 2017-07-10
+;
+; This script extracts and installs ClassicWB OS39 v28 created by Bloodwych from EAB. 
+; With permission from Bloodwych it's been converted to a package for HstWB Installer.
+; Original version of ClassicWB OS39 can be downloaded from http://classicwb.abime.net/.
+; The install script is based on S/Startup-Sequence from System.hdf with following changes:
+; - TDB.
+
+; Copy readme and screenshots to locale help for ClassicWB OS39
+IF NOT EXISTS SYSTEMDIR:Locale/Help/ClassicWB-OS39
+  makepath >NIL: SYSTEMDIR:Locale/Help/ClassicWB-OS39
+  IF EXISTS SYSTEMDIR:Prefs/Env-Archive/Sys/def_drawer.info
+    makeicon >NIL: SYSTEMDIR:Locale/Help/ClassicWB-OS39 FROM SYSTEMDIR:Prefs/Env-Archive/Sys/def_drawer.info 
+  ELSE
+    makeicon >NIL: SYSTEMDIR:Locale/Help/ClassicWB-OS39
+  ENDIF
+ENDIF
+IF NOT EXISTS SYSTEMDIR:Locale/Help.info
+  IF EXISTS SYSTEMDIR:Prefs/Env-Archive/Sys/def_drawer.info
+    makeicon >NIL: SYSTEMDIR:Locale/Help FROM SYSTEMDIR:Prefs/Env-Archive/Sys/def_drawer.info 
+  ELSE
+    makeicon >NIL: SYSTEMDIR:Locale/Help
+  ENDIF
+ENDIF
+IF NOT EXISTS SYSTEMDIR:Locale.info
+  IF EXISTS SYSTEMDIR:Prefs/Env-Archive/Sys/def_drawer.info
+    makeicon >NIL: SYSTEMDIR:Locale FROM SYSTEMDIR:Prefs/Env-Archive/Sys/def_drawer.info 
+  ELSE
+    makeicon >NIL: SYSTEMDIR:Locale
+  ENDIF
+ENDIF
+copy >NIL: PACKAGEDIR:README SYSTEMDIR:Locale/Help/ClassicWB-OS39
+copy >NIL: PACKAGEDIR:README.guide SYSTEMDIR:Locale/Help/ClassicWB-OS39
+copy >NIL: PACKAGEDIR:README.info SYSTEMDIR:Locale/Help/ClassicWB-OS39
+IF NOT EXISTS SYSTEMDIR:Locale/Help/ClassicWB-OS39/screenshots
+  makepath >NIL: SYSTEMDIR:Locale/Help/ClassicWB-OS39/screenshots
+ENDIF
+copy >NIL: PACKAGEDIR:screenshots/#?.iff SYSTEMDIR:Locale/Help/ClassicWB-OS39/screenshots
+
+; Extract classicwb OS39 v28 zip to systemdir
+
+LAB END
+
+cls
+
+echo ""
+echo "Installation Complete!"
+echo ""
+ask "Press RETURN to continue."
+cls
