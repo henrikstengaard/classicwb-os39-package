@@ -314,6 +314,11 @@ LAB COPPER
 IF EXISTS SYSTEMDIR:C/Copper_enable
   cls
   echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
   echo "AGA Copper backgrounds"
   echo "----------------------"
   echo ""
@@ -558,6 +563,7 @@ ENDIF
 
 LAB ENABLE
 
+  delete >NIL: SYSTEMDIR:Temp/CyberBugFix_disable
   SKIP FREEWHEEL
 
 LAB DISABLE
