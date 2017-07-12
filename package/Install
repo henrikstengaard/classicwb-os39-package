@@ -2,13 +2,19 @@
 ; -----------------------------------------
 ;
 ; Author: Henrik Noerfjand Stengaard 
-; Date: 2017-07-10
+; Date: 2017-07-12
 ;
 ; This script extracts and installs ClassicWB OS39 v28 created by Bloodwych from EAB. 
 ; With permission from Bloodwych it's been converted to a package for HstWB Installer.
 ; Original version of ClassicWB OS39 can be downloaded from http://classicwb.abime.net/.
 ; The install script is based on S/Startup-Sequence from System.hdf with following changes:
-; - TDB.
+; - Copying Amiga OS 3.9 files from HD0: to HD1: has been replaced by extract ClassicWB OS39 on top of Amiga OS 3.9 installation.
+; - Paths has been changed: SYS: to SYSTEMDIR:, C: to SYSTEMDIR:C/, L: to SYSTEMDIR:L/.
+; - Modified versions of Temp enable and disable option scripts with changed paths.
+; - Removed all "press enter to continue" expect last one used after installation complete message is shown.
+; - Removed and reduced waits.
+; - Adjusted text spacing.
+
 
 ; Copy readme and screenshots to locale help for ClassicWB OS39
 IF NOT EXISTS SYSTEMDIR:Locale/Help/ClassicWB-OS39
@@ -42,16 +48,13 @@ ENDIF
 copy >NIL: PACKAGEDIR:screenshots/#?.iff SYSTEMDIR:Locale/Help/ClassicWB-OS39/screenshots
 
 
-; Goto fail, if version.library is not 45.3 (Boing Bag 2 installed)
+; Show install classicwb requester, if version.library is not 45.3 (Boing Bag 2 installed)
 Version >NIL: SYSTEMDIR:libs/version.library version 45 3 FILE
 IF WARN
-  echo ""
-  echo "Incorrect system version has been detected."
-  echo ""
-  echo "Please make sure you have installed"
-  echo "Boing Bags 1 and 2 to avoid problems."
-  echo ""
-  SKIP end
+  set installclassicwb `RequestChoice "Install ClassicWB" "WARNING: ClassicWB OS39 requires AmigaOS 3.9 Boing Bags*N1 and 2 are installed to avoid problems!*N*NDo you want to continue installation of ClassicWB OS39?" "Yes|No"`
+  IF NOT "$installclassicwb" EQ "1"
+    SKIP end
+  ENDIF
 ENDIF 
 
 

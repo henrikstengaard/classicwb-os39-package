@@ -38,7 +38,12 @@ ClassicWB is installed from a zip file containing all files from ClassicWB Syste
 
 The install script for HstWB Installer is based on Install_CWB39 from ClassicWB System.hdf with following changes:
 
-- TDB.
+- Copying Amiga OS 3.9 files from HD0: to HD1: has been replaced by extract ClassicWB OS39 on top of Amiga OS 3.9 installation.
+- Paths has been changed: SYS: to SYSTEMDIR:, C: to SYSTEMDIR:C/, L: to SYSTEMDIR:L/.
+- Modified versions of Temp enable and disable option scripts with changed paths.
+- Removed all "press enter to continue" expect last one used after installation complete message is shown.
+- Removed and reduced waits.
+- Adjusted text spacing.
 
 ## Screenshots
 
