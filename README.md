@@ -14,7 +14,7 @@ Original version of ClassicWB OS39 can be downloaded from http://classicwb.abime
 
 ClassicWB OS39 package has following requirements:
 
-1. Amiga OS 3.9 and Boing Bag 1 & 2 installed.
+1. Amiga OS 3.9 and Boing Bag 1 & 2 installed or Amiga OS 3.1.4.
 2. About 105MB free space on harddrive for installation.
 
 ## Installation
@@ -44,6 +44,9 @@ The install script for HstWB Installer is based on Install_CWB39 from ClassicWB 
 - Removed all "press enter to continue" expect last one used after installation complete message is shown.
 - Removed and reduced waits.
 - Adjusted text spacing.
+- Added support for Amiga OS 3.1.4:
+  - Added LoadModule ROMUPDATE to support Kickstart 3.1 being patched to 3.1.4.
+  - Delete WBStartup's not present with Amiga OS 3.1.4.
 
 ## Screenshots
 
