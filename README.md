@@ -47,10 +47,18 @@ The install script for HstWB Installer is based on Install_CWB39 from ClassicWB 
 - Added support for Amiga OS 3.1.4:
   - Added LoadModule ROMUPDATE to support Kickstart 3.1 being patched to 3.1.4.
   - Delete WBStartup's not present with Amiga OS 3.1.4.
+  - Updated User-Startup to replace CON with KCON.
+  - Updated DirectoryOpus to use CON instead of VNC.
 
 ## Screenshots
 
 Screenshots of ClassicWB OS39 from http://classicwb.abime.net/classicweb/os39pics.htm.
+
+![ClassicWB OS39 3.1.4 1](screenshots/classicwb_os39_3.1.4_1.png?raw=true)
+
+![ClassicWB OS39 3.1.4 2](screenshots/classicwb_os39_3.1.4_2.png?raw=true)
+
+![ClassicWB OS39 3.1.4 3](screenshots/classicwb_os39_3.1.4_3.png?raw=true)
 
 ![ClassicWB OS39 1](screenshots/classicwb_os39_1.png?raw=true)
 
