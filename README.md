@@ -45,7 +45,11 @@ The install script for HstWB Installer is based on Install_CWB39 from ClassicWB 
 - Removed and reduced waits.
 - Adjusted text spacing.
 - Added support for Amiga OS 3.1.4:
+  - Reinstall MUI to fix iGame.
+  - Added AmiDock replacement.
   - Added LoadModule ROMUPDATE to support Kickstart 3.1 being patched to 3.1.4.
+  - Added install patch Amiga OS 3.1.4.1, if Amiga OS 3.1.4.1 update is installed.
+  - Disabled and removed MyClock, if Amiga OS 3.1.4 is installed.
   - Delete WBStartup's not present with Amiga OS 3.1.4.
   - Updated User-Startup to replace CON with KCON.
   - Updated DirectoryOpus to use CON instead of VNC.
