@@ -44,7 +44,7 @@ ELSE
 EndIF
 Unset SCSIUpdate
 ;End OS3.9 Checks 
-
+C:CPU CHECKINSTALL
 
 C:GetMouseInput LOCAL
 
