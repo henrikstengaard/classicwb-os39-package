@@ -2,7 +2,7 @@
 ; -----------------------------------------
 ;
 ; Author: Henrik Noerfjand Stengaard 
-; Date: 2019-07-24
+; Date: 2019-08-11
 ;
 ; This script extracts and installs ClassicWB OS39 v28 created by Bloodwych from EAB. 
 ; With permission from Bloodwych it's been converted to a package for HstWB Installer.
@@ -16,7 +16,7 @@
 ; - Adjusted text spacing.
 ; - Added support for Amiga OS 3.1.4:
 ;   - Reinstall MUI to fix iGame.
-;   - Added AmiDock replacement.
+;   - Added WBDock as replacement to AmiDock.
 ;   - Added LoadModule ROMUPDATE to support Kickstart 3.1 being patched to 3.1.4.
 ;   - Added install patch Amiga OS 3.1.4.1, if Amiga OS 3.1.4.1 update is installed.
 ;   - Disabled and removed MyClock, if Amiga OS 3.1.4 is installed.
@@ -118,13 +118,16 @@ IF "$amigaosversion" EQ "3.1.4"
   ; copy directoryopus.cfg with vnc replaced with con
   Copy >NIL: PACKAGEDIR:amigaos-3.1.4/DirectoryOpus.CFG SYSTEMDIR:Programs/DirOpus4/s/DirectoryOpus.CFG   
 
+  ; copy wbdock to wbstartup
+  Copy >NIL: PACKAGEDIR:amigaos-3.1.4/WBDock/#? SYSTEMDIR:WBStartup
+
   ; copy amidock replacement to system
-  MakePath >NIL: SYSTEMDIR:System/AmiDock
-  Copy >NIL: PACKAGEDIR:amigaos-3.1.4/AmiDock/#? SYSTEMDIR:System/AmiDock/ ALL   
+  ;MakePath >NIL: SYSTEMDIR:System/AmiDock
+  ;Copy >NIL: PACKAGEDIR:amigaos-3.1.4/AmiDock/#? SYSTEMDIR:System/AmiDock/ ALL   
 
   ; copy amidock replacement to wbstartup
-  Copy >NIL: PACKAGEDIR:amigaos-3.1.4/AmiDock/amidock SYSTEMDIR:WBStartup   
-  Copy >NIL: PACKAGEDIR:amigaos-3.1.4/AmiDock/amidock.info SYSTEMDIR:WBStartup
+  ;Copy >NIL: PACKAGEDIR:amigaos-3.1.4/AmiDock/amidock SYSTEMDIR:WBStartup   
+  ;Copy >NIL: PACKAGEDIR:amigaos-3.1.4/AmiDock/amidock.info SYSTEMDIR:WBStartup
 ELSE
   ; extract classicwb os39
   unzip -qq -o -x PACKAGEDIR:classicwb_os39_v28.zip -d SYSTEMDIR:
