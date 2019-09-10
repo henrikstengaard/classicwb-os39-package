@@ -2,7 +2,7 @@
 ; -----------------------------------------
 ;
 ; Author: Henrik Noerfjand Stengaard 
-; Date: 2019-08-23
+; Date: 2019-09-09
 ;
 ; This script extracts and installs ClassicWB OS39 v28 created by Bloodwych from EAB. 
 ; With permission from Bloodwych it's been converted to a package for HstWB Installer.
@@ -92,12 +92,14 @@ IF "$amigaosversion" EQ "3.1.4"
   ; extract classicwb os39 excluding files conflicting with amiga os 3.1.4
   unzip -qq -o -x PACKAGEDIR:classicwb_os39_v28.zip -d SYSTEMDIR: -x *LoadModule *SetPatch *FastFileSystem *68040.library *lowlevel.library
 
-  ; delete wbstartup's not present with amiga os 3.1.4
+  ; delete icons for programs not present with amiga os 3.1.4
   Delete >NIL: SYSTEMDIR:WBStartup/AmiDock.info
   Delete >NIL: SYSTEMDIR:WBStartup/ASyncWB.info
   Delete >NIL: SYSTEMDIR:WBStartup/BenchTrash.info
   Delete >NIL: SYSTEMDIR:WBStartup/DefIcons.info
   Delete >NIL: SYSTEMDIR:WBStartup/RAWBInfo.info
+  Delete >NIL: SYSTEMDIR:Prefs/ViNCEd.info
+  Delete >NIL: SYSTEMDIR:System/Shell_VNC.info
 
   ; reinstall mui to fix igame
   MakePath >NIL: "SYSTEMDIR:Temp/MUI"
@@ -105,25 +107,13 @@ IF "$amigaosversion" EQ "3.1.4"
   Copy >NIL: "SYSTEMDIR:Temp/MUI/MUI/#?" "SYSTEMDIR:System/MUI/" CLONE ALL
   Delete >NIL: "SYSTEMDIR:Temp/MUI/" ALL
 
-  ; copy startup-sequence for amiga os 3.1.4
-  Copy >NIL: PACKAGEDIR:amigaos-3.1.4/Startup-Sequence SYSTEMDIR:S/Startup-Sequence   
+  ; copy amiga os 3.1.4 patches to systemdir
+  Copy >NIL: PACKAGEDIR:amigaos-3.1.4/patches/#? SYSTEMDIR: ALL
 
   ; install patch amiga os 3.1.4.1, if it exists
   IF EXISTS "SYSTEMDIR:S/Install-Patch-Amiga-OS-3141"
     Execute "SYSTEMDIR:S/Install-Patch-Amiga-OS-3141" SYS SYSTEMDIR QUIET
   ENDIF
-
-  ; copy user-startup with vnc replaced with con
-  Copy >NIL: PACKAGEDIR:amigaos-3.1.4/User-Startup SYSTEMDIR:S/User-Startup   
-
-  ; copy directoryopus.cfg with vnc replaced with con
-  Copy >NIL: PACKAGEDIR:amigaos-3.1.4/DirectoryOpus.CFG SYSTEMDIR:Programs/DirOpus4/s/DirectoryOpus.CFG   
-
-  ; copy wbdock to wbstartup
-  Copy >NIL: PACKAGEDIR:amigaos-3.1.4/WBDock/#? SYSTEMDIR:WBStartup
-
-  ; copy wbrun to fix run menus
-  Copy >NIL: PACKAGEDIR:amigaos-3.1.4/WBRun SYSTEMDIR:C
 ELSE
   ; extract classicwb os39
   unzip -qq -o -x PACKAGEDIR:classicwb_os39_v28.zip -d SYSTEMDIR:
