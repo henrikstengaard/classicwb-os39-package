@@ -14,7 +14,7 @@ Original version of ClassicWB OS39 can be downloaded from http://classicwb.abime
 
 ClassicWB OS39 package has following requirements:
 
-1. Amiga OS 3.9 and Boing Bag 1 & 2 installed or Amiga OS 3.1.4.
+1. Amiga OS 3.9 and Boing Bag 1 & 2 installed, Amiga OS 3.2 or Amiga OS 3.1.4.
 2. About 105MB free space on harddrive for installation.
 
 ## Installation
@@ -44,19 +44,29 @@ The install script for HstWB Installer is based on Install_CWB39 from ClassicWB 
 - Removed all "press enter to continue" expect last one used after installation complete message is shown.
 - Removed and reduced waits.
 - Adjusted text spacing.
-- Added support for Amiga OS 3.1.4:
+- Added support for Amiga OS 3.2 and 3.1.4:
   - Reinstall MUI to fix iGame.
   - Added WBDock as replacement to AmiDock.
   - Added LoadModule ROMUPDATE to support Kickstart 3.1 being patched to 3.1.4.
   - Added install patch Amiga OS 3.1.4.1, if Amiga OS 3.1.4.1 update is installed.
-  - Disabled and removed MyClock, if Amiga OS 3.1.4 is installed.
-  - Delete WBStartup's not present with Amiga OS 3.1.4.
+  - Disabled and removed MyClock, if Amiga OS 3.2 and 3.1.4 is installed.
+  - Delete WBStartup's not present with Amiga OS 3.2 and 3.1.4.
   - Updated User-Startup to replace CON with KCON.
   - Updated DirectoryOpus to use CON instead of VNC.
+  - Added WBRun to fix run menus.
+  - Disable Copper, BorderBlank, StackAttack, CyberBugFix, MyClock.
 
 ## Screenshots
 
 Screenshots of ClassicWB OS39 from http://classicwb.abime.net/classicweb/os39pics.htm.
+
+![ClassicWB OS39 3.2 1](screenshots/classicwb_os39_3.2_1.png?raw=true)
+
+![ClassicWB OS39 3.2 2](screenshots/classicwb_os39_3.2_2.png?raw=true)
+
+![ClassicWB OS39 3.2 3](screenshots/classicwb_os39_3.2_3.png?raw=true)
+
+![ClassicWB OS39 3.2 4](screenshots/classicwb_os39_3.2_4.png?raw=true)
 
 ![ClassicWB OS39 3.1.4 1](screenshots/classicwb_os39_3.1.4_1.png?raw=true)
 

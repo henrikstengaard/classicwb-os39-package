@@ -5,7 +5,7 @@
         "amigaos"
     ],
     "name": "ClassicWB OS39",
-    "version": "28.1.2",
+    "version": "28.2.0",
     "priority": 1,
     "assigns":
     [
@@ -15,6 +15,7 @@
     ],
     "amigaOsVersions": [
         "3.9",
+        "3.2",
         "3.1.4"
     ]
 }
