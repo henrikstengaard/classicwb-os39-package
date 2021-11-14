@@ -1,0 +1,28 @@
+F/CPU CHECKINSTALL/; I
+
+FailAt 21
+C:GetMouseInput LOCAL
+
+IF $MouseInput EQ 1
+  Unset MouseInput
+  C:Assign >NIL: ENV: RAM:
+  C:Assign >NIL: T: RAM:
+  C:Execute S:Maxmem-Sequence
+  EndCLI >NIL:
+EndIF
+
+IF $MouseInput EQ 2
+  Unset MouseInput
+  C:Execute S:Bootmenu-Sequence
+  EndCLI >NIL:
+EndIF
+
+Unset MouseInput
+
+IF EXISTS SYS:WBstartupD
+  C:Rename >NIL: SYS:WBStartup SYS:WBStartupM
+  C:Rename >NIL: SYS:WBStartupD SYS:WBStartup
+EndIF
+
+Z
+; W

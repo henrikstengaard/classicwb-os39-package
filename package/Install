@@ -2,7 +2,7 @@
 ; -----------------------------------------
 ;
 ; Author: Henrik Noerfjand Stengaard 
-; Date: 2021-08-14
+; Date: 2021-11-14
 ;
 ; This script extracts and installs ClassicWB OS39 v28 created by Bloodwych from EAB. 
 ; With permission from Bloodwych it's been converted to a package for HstWB Installer.
@@ -101,9 +101,22 @@ ENDIF
 ; Extract classicwb os39 v28 zip to systemdir
 echo "Installing ClassicWB OS39..." 
 
+; create backup of wb startup sequence
+IF EXISTS SYSTEMDIR:S/Startup-Sequence
+  Copy >NIL: SYSTEMDIR:S/Startup-Sequence SYSTEMDIR:S/Startup-Sequence.WB
+ENDIF
+
+; create backup of wb user startup
+IF EXISTS SYSTEMDIR:S/User-Startup
+  Copy >NIL: SYSTEMDIR:S/User-Startup SYSTEMDIR:S/User-Startup.WB
+ENDIF
+
 IF NOT "$amigaosversion" EQ "3.1"
   ; extract classicwb os39 excluding files conflicting with amiga os 3.2 and 3.1.4
   unzip -qq -o -x PACKAGEDIR:classicwb_os39_v28.zip -d SYSTEMDIR: -x *LoadModule *SetPatch *FastFileSystem *68040.library *lowlevel.library
+
+  ; restore wb startup sequence
+  Copy >NIL: SYSTEMDIR:S/Startup-Sequence.WB SYSTEMDIR:S/Startup-Sequence
 
   ; delete icons for programs not present with amiga os 3.2 and 3.1.4
   Delete >NIL: SYSTEMDIR:WBStartup/AmiDock.info
@@ -123,13 +136,73 @@ IF NOT "$amigaosversion" EQ "3.1"
   ; copy amiga os 3.2 and 3.1.4 patches to systemdir
   Copy >NIL: PACKAGEDIR:Patches/SystemDir/#? SYSTEMDIR: ALL
 
+  ; add boot menu and wbstartup to startup sequence after "CPU CHECKINSTALL", if not present
+  Search >NIL: SYSTEMDIR:S/Startup-Sequence "S:Bootmenu-Sequence" quiet
+  IF NOT $RC EQ 0 VAL
+    Edit SYSTEMDIR:S/Startup-Sequence OPT P70 with PACKAGEDIR:Patches/Add-BootMenu-WBStartup.edit
+  ENDIF
+ 
+  ; add visual prefs to startup sequence after "AddDataTypes", if not present
+  Search >NIL: SYSTEMDIR:S/Startup-Sequence "VisualPrefs" quiet
+  IF NOT $RC EQ 0 VAL
+    Edit SYSTEMDIR:S/Startup-Sequence OPT P70 with PACKAGEDIR:Patches/Add-VisualPrefs.edit
+  ENDIF
+
+  ; add full palette to startup sequence after "ConClip", if not present
+  Search >NIL: SYSTEMDIR:S/Startup-Sequence "FPPrefs" quiet
+  IF NOT $RC EQ 0 VAL
+    Edit SYSTEMDIR:S/Startup-Sequence OPT P70 with PACKAGEDIR:Patches/Add-FPPrefs.edit
+  ENDIF
+
+  ; create backup of os39 user startup
+  Copy >NIL: SYSTEMDIR:S/User-Startup SYSTEMDIR:S/User-Startup.OS39
+
+  ; restore wb user startup or create user startup, if it doesn't exist
+  IF EXISTS SYSTEMDIR:S/User-Startup.WB
+    Copy >NIL: SYSTEMDIR:S/User-Startup.WB SYSTEMDIR:S/User-Startup
+  ELSE
+    Echo "" NOLINE >SYSTEMDIR:S/User-Startup
+  ENDIF
+
+  ; add anticlick to user startup, if not present
+  Search >NIL: SYSTEMDIR:S/User-Startup "AntiClick" quiet
+  IF NOT $RC EQ 0 VAL
+    Type PACKAGEDIR:Patches/User-Startup-AntiClick >>SYSTEMDIR:S/User-Startup
+  ENDIF
+
+  ; add assigns to user startup, if not present
+  Search >NIL: SYSTEMDIR:S/User-Startup "Assign-Startup" quiet
+  IF NOT $RC EQ 0 VAL
+    Type PACKAGEDIR:Patches/User-Startup-Assigns >>SYSTEMDIR:S/User-Startup
+  ENDIF
+
+  ; add mui to user startup, if not present
+  Search >NIL: SYSTEMDIR:S/User-Startup "MUI" quiet
+  IF NOT $RC EQ 0 VAL
+    Type PACKAGEDIR:Patches/User-Startup-MUI >>SYSTEMDIR:S/User-Startup
+  ENDIF
+
+  ; add xfd to user startup, if not present
+  Search >NIL: SYSTEMDIR:S/User-Startup "xfd" quiet
+  IF NOT $RC EQ 0 VAL
+    Type PACKAGEDIR:Patches/User-Startup-Xfd >>SYSTEMDIR:S/User-Startup
+  ENDIF
+
   IF "$amigaosversion" EQ "3.2"
+    Delete >NIL: SYSTEMDIR:Devs/DOSDrivers/PIPE#?
+
     ; copy startup-sequence for amiga os 3.2
-    Copy >NIL: PACKAGEDIR:Patches/Startup-Sequence.3.2 SYSTEMDIR:S/Startup-Sequence
+    Copy >NIL: PACKAGEDIR:Patches/Startup-Sequence.3.2 SYSTEMDIR:S/Startup-Sequence.OS39
   ELSE
     IF "$amigaosversion" EQ "3.1.4"
       ; copy startup-sequence for amiga os 3.1.4
-      Copy >NIL: PACKAGEDIR:Patches/Startup-Sequence.3.1.4 SYSTEMDIR:S/Startup-Sequence
+      Copy >NIL: PACKAGEDIR:Patches/Startup-Sequence.3.1.4 SYSTEMDIR:S/Startup-Sequence.OS39
+
+      ; add kingcon to user startup, if not present
+      Search >NIL: SYSTEMDIR:S/User-Startup "KingCON" quiet
+      IF NOT $RC EQ 0 VAL
+        Type PACKAGEDIR:Patches/User-Startup-KingCON >>SYSTEMDIR:S/User-Startup
+      ENDIF
 
       ; install patch amiga os 3.1.4.1, if it exists
       IF EXISTS "SYSTEMDIR:S/Install-Patch-Amiga-OS-3141"
@@ -141,14 +214,14 @@ ELSE
   ; extract classicwb os39
   unzip -qq -o -x PACKAGEDIR:classicwb_os39_v28.zip -d SYSTEMDIR:
 
-  ; copy startup-sequence
-  copy >NIL: SYSTEMDIR:t/Science SYSTEMDIR:S/Startup-Sequence CLONE
+  ; copy startup-sequence for amiga os 3.9
+  Copy >NIL: PACKAGEDIR:Patches/Startup-Sequence.3.9 SYSTEMDIR:S/Startup-Sequence
 ENDIF
 
 ; set harddisk icon
 set harddiskicon ""
-IF EXISTS "SYSTEMDIR:Prefs/Env-Archive/Sys/def_harddisk.info"
-  set harddiskicon "SYSTEMDIR:Prefs/Env-Archive/Sys/def_harddisk.info"
+IF EXISTS "SYSTEMDIR:Prefs/Env-Archive/Sys/def_disk.info"
+  set harddiskicon "SYSTEMDIR:Prefs/Env-Archive/Sys/def_disk.info"
 ELSE
   IF EXISTS "SYSTEMDIR:Disk.info"
     set harddiskicon "SYSTEMDIR:Disk.info"

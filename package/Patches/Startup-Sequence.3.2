@@ -120,6 +120,17 @@ EndIF
 BindDrivers
 C:Mount >NIL: DEVS:DOSDrivers/~(#?.info)
 
+; load monitor drivers (required for picasso96)
+IF EXISTS DEVS:Monitors
+  IF EXISTS DEVS:Monitors/VGAOnly
+    DEVS:Monitors/VGAOnly
+  EndIF
+
+  C:List >NIL: DEVS:Monitors/~(#?.info|VGAOnly) TO T:M LFORMAT "DEVS:Monitors/%s"
+  Execute T:M
+  C:Delete >NIL: T:M
+EndIF
+
 SetEnv Language "english"
 SetEnv Workbench $Workbench
 SetEnv Kickstart $Kickstart

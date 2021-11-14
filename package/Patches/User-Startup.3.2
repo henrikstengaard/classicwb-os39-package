@@ -1,0 +1,54 @@
+;ClassicWB User-Startup
+;----------------------
+;OS39
+;Amiga OS 3.2
+
+IF EXISTS C:AntiClick
+  C:AntiClick
+EndIF
+
+Execute S:Assign-Startup
+
+Assign >NIL: LAUNCH: SYS:System/BMenu/Files
+Assign >NIL: VMEM: SYS:T
+Assign >NIL: AWEB_APL: SYS:Internet/AWeb_APL
+Assign >NIL: PROGDIR: SYS:Programs/Find
+Assign >NIL: DOPUS: SYS:Programs/DirOpus4
+
+C:Copy >NIL: S:Ram.info RAM:Disk.info
+
+;BEGIN MUI
+IF EXISTS SYS:System/MUI
+   Assign >NIL: MUI: SYS:System/MUI
+   IF EXISTS MUI:Libs
+      Assign >NIL: ADD LIBS: MUI:Libs
+   EndIF
+   IF EXISTS MUI:Locale
+      Assign >NIL: ADD LOCALE: MUI:Locale
+   EndIF
+   C:Version >NIL: exec.library 39
+   IF NOT WARN
+      IF EXISTS MUI:Docs
+         IF EXISTS HELP:dummy
+         EndIF
+         Assign >NIL: ADD HELP: MUI:Docs
+      EndIF
+   EndIF
+EndIF
+;END MUI
+
+C:xfdPatch >NIL:
+
+Run >NIL: C:XpkMasterPrefs
+
+IF EXISTS C:BorderBlank
+  C:BorderBlank
+EndIF
+
+; Replace CON with KingCON, if present
+IF EXISTS DEVS:KingCON-mountlist
+  Assign CON: DISMOUNT
+  Assign RAW: DISMOUNT 
+  Mount CON: from DEVS:KingCON-mountlist
+  Mount RAW: from DEVS:KingCON-mountlist 
+ENDIF

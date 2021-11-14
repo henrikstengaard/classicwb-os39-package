@@ -44,12 +44,15 @@ The install script for HstWB Installer is based on Install_CWB39 from ClassicWB 
 - Removed all "press enter to continue" expect last one used after installation complete message is shown.
 - Removed and reduced waits.
 - Adjusted text spacing.
+- Fix startup sequence and user startup to support Picasso96.
+- Copy disk icon def_disk.info to harddisk DH1: and DH2:.
 - Added support for Amiga OS 3.2 and 3.1.4:
+  - Patch startup sequence and user startup with ClassicWB OS39 changes for better compatibility.
+    - Startup sequence before installing ClassicWB OS39 is backed up as S:Startup-Sequence.WB.
+    - Startup sequence patched for ClassicWB OS39 is installed as S:Startup-Sequence.OS39.
   - Reinstall MUI to fix iGame.
   - Added WBDock as replacement to AmiDock.
-  - Added LoadModule ROMUPDATE to support Kickstart 3.1 being patched to 3.1.4.
-  - Added install patch Amiga OS 3.1.4.1, if Amiga OS 3.1.4.1 update is installed.
-  - Disabled and removed MyClock, if Amiga OS 3.2 and 3.1.4 is installed.
+  - Disabled and removed MyClock.
   - Delete WBStartup's not present with Amiga OS 3.2 and 3.1.4.
   - Updated User-Startup to replace CON with KCON.
   - Updated DirectoryOpus to use CON instead of VNC.
