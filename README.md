@@ -14,7 +14,7 @@ Original version of ClassicWB OS39 can be downloaded from http://classicwb.abime
 
 ClassicWB OS39 package has following requirements:
 
-1. Amiga OS 3.9 and Boing Bag 1 & 2 installed, Amiga OS 3.2 or Amiga OS 3.1.4.
+1. Amiga OS 3.9 and Boing Bag 1 & 2 installed, Amiga OS 3.2, 3.1.4 or 3.1.
 2. About 105MB free space on harddrive for installation.
 
 ## Installation
@@ -44,16 +44,17 @@ The install script for HstWB Installer is based on Install_CWB39 from ClassicWB 
 - Removed all "press enter to continue" expect last one used after installation complete message is shown.
 - Removed and reduced waits.
 - Adjusted text spacing.
-- Fix startup sequence and user startup to support Picasso96.
-- Copy disk icon def_disk.info to harddisk DH1: and DH2:.
-- Added support for Amiga OS 3.2 and 3.1.4:
-  - Patch startup sequence and user startup with ClassicWB OS39 changes for better compatibility.
-    - Startup sequence before installing ClassicWB OS39 is backed up as S:Startup-Sequence.WB.
-    - Startup sequence patched for ClassicWB OS39 is installed as S:Startup-Sequence.OS39.
+- Creates backup of startup sequence as "S:Startup-Sequence.BAK".
+- Creates backup of user startup as "S:User-Startup.BAK". 
+- Creates backup of original ClassicWB OS39 startup sequence as "S:Startup-Sequence.CWB".
+- Creates backup of original ClassicWB OS39 user startup as "S:User-Startup.CWB". 
+- Patch startup sequence and user startup with ClassicWB OS39 changes for best Amiga OS compatibility with existing and future versions.
+- Added support for Amiga OS 3.2, 3.1.4 and 3.1:
   - Reinstall MUI to fix iGame.
   - Added WBDock as replacement to AmiDock.
-  - Disabled and removed MyClock.
-  - Delete WBStartup's not present with Amiga OS 3.2 and 3.1.4.
+  - Disabled and removed MyClock, if Amiga OS 3.2, 3.1.4 or 3.1 is installed.
+  - Delete WBStartup's not present, if Amiga OS 3.2, 3.1.4 or 3.1 is installed.
+  - Added NewIcons and ClassAct to remove icon borders and add icon transparency, if Amiga OS 3.1 is installed.
   - Updated User-Startup to replace CON with KCON.
   - Updated DirectoryOpus to use CON instead of VNC.
   - Added WBRun to fix run menus.
@@ -61,7 +62,7 @@ The install script for HstWB Installer is based on Install_CWB39 from ClassicWB 
 
 ## Screenshots
 
-Screenshots of ClassicWB OS39 from http://classicwb.abime.net/classicweb/os39pics.htm.
+Screenshots of ClassicWB OS39 installed with Amiga OS 3.2.
 
 ![ClassicWB OS39 3.2 1](screenshots/classicwb_os39_3.2_1.png?raw=true)
 
@@ -69,13 +70,23 @@ Screenshots of ClassicWB OS39 from http://classicwb.abime.net/classicweb/os39pic
 
 ![ClassicWB OS39 3.2 3](screenshots/classicwb_os39_3.2_3.png?raw=true)
 
-![ClassicWB OS39 3.2 4](screenshots/classicwb_os39_3.2_4.png?raw=true)
+Screenshots of ClassicWB OS39 installed with Amiga OS 3.1.4.
 
 ![ClassicWB OS39 3.1.4 1](screenshots/classicwb_os39_3.1.4_1.png?raw=true)
 
 ![ClassicWB OS39 3.1.4 2](screenshots/classicwb_os39_3.1.4_2.png?raw=true)
 
 ![ClassicWB OS39 3.1.4 3](screenshots/classicwb_os39_3.1.4_3.png?raw=true)
+
+Screenshots of ClassicWB OS39 installed with Amiga OS 3.1.
+
+![ClassicWB OS39 3.1 1](screenshots/classicwb_os39_3.1_1.png?raw=true)
+
+![ClassicWB OS39 3.1 2](screenshots/classicwb_os39_3.1_2.png?raw=true)
+
+![ClassicWB OS39 3.1 3](screenshots/classicwb_os39_3.1_3.png?raw=true)
+
+Screenshots of ClassicWB OS39 from http://classicwb.abime.net/classicweb/os39pics.htm.
 
 ![ClassicWB OS39 1](screenshots/classicwb_os39_1.png?raw=true)
 

@@ -1,6 +1,0 @@
-F/AddDataTypes/; I
-IF EXISTS SYS:System/VPrefs/VisualPrefs
-  Run > NIL: SYS:System/VPrefs/VisualPrefs
-EndIF
-Z
-; W

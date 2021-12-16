@@ -1,0 +1,4 @@
+; execute iconlib startup, if it exists
+If Exists S:IconLib-Startup
+  Execute S:IconLib-Startup
+EndIF

@@ -1,0 +1,4 @@
+; execute setpatch startup, if it exists
+IF EXISTS S:SetPatch-Startup
+  Execute S:SetPatch-Startup
+ENDIF

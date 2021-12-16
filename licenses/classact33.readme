@@ -1,0 +1,11 @@
+Short:        Advanced GUI toolkit
+Author:       Christopher Aldi, Timothy Aston, Osma Ahvenlampi and Petter Nilsen
+Uploader:     aminet aminet net
+Type:         dev/gui
+Version:      3.3
+Architecture: m68k-amigaos
+
+The final public version of ClassAct, a set of over 30 BOOPSI classes. This
+archive was previously available from http://www.amitrix.com.
+
+For more information about ClassAct, refer to: dev/gui/ClassAct2Demo.lha

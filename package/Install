@@ -2,7 +2,7 @@
 ; -----------------------------------------
 ;
 ; Author: Henrik Noerfjand Stengaard 
-; Date: 2021-11-14
+; Date: 2021-12-16
 ;
 ; This script extracts and installs ClassicWB OS39 v28 created by Bloodwych from EAB. 
 ; With permission from Bloodwych it's been converted to a package for HstWB Installer.
@@ -14,13 +14,18 @@
 ; - Removed all "press enter to continue" expect last one used after installation complete message is shown.
 ; - Removed and reduced waits.
 ; - Adjusted text spacing.
-; - Added support for Amiga OS 3.2 and 3.1.4:
+; - Creates backup of startup sequence as "S:Startup-Sequence.BAK".
+; - Creates backup of user startup as "S:User-Startup.BAK". 
+; - Creates backup of original ClassicWB OS39 startup sequence as "S:Startup-Sequence.CWB".
+; - Creates backup of original ClassicWB OS39 user startup as "S:User-Startup.CWB". 
+; - Patch startup sequence and user startup with ClassicWB OS39 changes for best Amiga OS compatibility with existing and future versions.
+; - Updated User-Startup to replace CON with KCON (KingCON).
+; - Added support for Amiga OS 3.2, 3.1.4 and 3.1:
 ;   - Reinstall MUI to fix iGame.
 ;   - Added WBDock as replacement to AmiDock.
-;   - Added LoadModule ROMUPDATE to support Kickstart 3.1 being patched to 3.1.4.
-;   - Added install patch Amiga OS 3.1.4.1, if Amiga OS 3.1.4.1 update is installed.
-;   - Disabled and removed MyClock, if Amiga OS 3.2 and 3.1.4 is installed.
-;   - Delete WBStartup's not present, if Amiga OS 3.2 and 3.1.4 is installed.
+;   - Disabled and removed MyClock, if Amiga OS 3.2, 3.1.4 or 3.1 is installed.
+;   - Delete WBStartup's not present, if Amiga OS 3.2, 3.1.4 or 3.1 is installed.
+;   - Added NewIcons and ClassAct to remove icon borders and add icon transparency, if Amiga OS 3.1 is installed.
 ;   - Updated User-Startup to replace CON with KCON.
 ;   - Updated DirectoryOpus to use CON instead of VNC.
 ;   - Added WBRun to fix run menus.
@@ -59,19 +64,21 @@ ENDIF
 copy >NIL: PACKAGEDIR:screenshots/#?.iff SYSTEMDIR:Locale/Help/ClassicWB-OS39/screenshots
 
 
-; Show install classicwb requester, if version.library is not 45.3 (Boing Bag 2 installed)
-Version >NIL: SYSTEMDIR:libs/version.library version 45 3 FILE
-IF WARN
-  set installclassicwb `RequestChoice "Install ClassicWB" "WARNING: ClassicWB OS39 requires AmigaOS 3.9 Boing Bags*N1 and 2 are installed to avoid problems!*N*NDo you want to continue installation of ClassicWB OS39?" "Yes|No"`
-  IF NOT "$installclassicwb" EQ "1"
-    SKIP end
-  ENDIF
-ENDIF 
-
-
 ; detect amiga os version
 set amigaosversion "3.1"
 IF EXISTS "SYSTEMDIR:Libs/workbench.library"
+  ; set amiga os version to 3.9, if workbench.library file is equal or greater than v45.102
+  Version >NIL: "SYSTEMDIR:Libs/workbench.library" 45 102 FILE
+  IF $RC EQ 0 VAL
+    set amigaosversion "3.9"
+  ENDIF
+
+  ; set amiga os version to 3.9, if workbench.library file is equal or greater than v45.127
+  Version >NIL: "SYSTEMDIR:Libs/workbench.library" 45 127 FILE
+  IF $RC EQ 0 VAL
+    set amigaosversion "3.9"
+  ENDIF
+
   ; set amiga os version to 3.1.4, if workbench.library file is equal or greater than v45.194
   Version >NIL: "SYSTEMDIR:Libs/workbench.library" 45 194 FILE
   IF $RC EQ 0 VAL
@@ -84,6 +91,18 @@ IF EXISTS "SYSTEMDIR:Libs/workbench.library"
     set amigaosversion "3.2"
   ENDIF
 ELSE
+  ; set amiga os version to 3.9, if loaded workbench.library is equal or greater than v45.102
+  Version >NIL: "workbench.library" 45 102
+  IF $RC EQ 0 VAL
+    set amigaosversion "3.9"
+  ENDIF
+
+  ; set amiga os version to 3.9, if loaded workbench.library is equal or greater than v45.127
+  Version >NIL: "workbench.library" 45 127
+  IF $RC EQ 0 VAL
+    set amigaosversion "3.9"
+  ENDIF
+
   ; set amiga os version to 3.1.4, if loaded workbench.library is equal or greater than v45.194
   Version >NIL: "workbench.library" 45 194
   IF $RC EQ 0 VAL
@@ -101,24 +120,33 @@ ENDIF
 ; Extract classicwb os39 v28 zip to systemdir
 echo "Installing ClassicWB OS39..." 
 
-; create backup of wb startup sequence
+; create backup of startup sequence
 IF EXISTS SYSTEMDIR:S/Startup-Sequence
-  Copy >NIL: SYSTEMDIR:S/Startup-Sequence SYSTEMDIR:S/Startup-Sequence.WB
+  Copy >NIL: SYSTEMDIR:S/Startup-Sequence SYSTEMDIR:S/Startup-Sequence.BAK
 ENDIF
 
-; create backup of wb user startup
+; create backup of user startup
 IF EXISTS SYSTEMDIR:S/User-Startup
-  Copy >NIL: SYSTEMDIR:S/User-Startup SYSTEMDIR:S/User-Startup.WB
+  Copy >NIL: SYSTEMDIR:S/User-Startup SYSTEMDIR:S/User-Startup.BAK
 ENDIF
 
-IF NOT "$amigaosversion" EQ "3.1"
-  ; extract classicwb os39 excluding files conflicting with amiga os 3.2 and 3.1.4
+IF NOT "$amigaosversion" EQ "3.9"
+  ; backup amiga os files
+  MakePath >NIL: SYSTEMDIR:Temp/_Backup
+  Copy >NIL: SYSTEMDIR:C SYSTEMDIR:Temp/_Backup/C ALL CLONE
+  Copy >NIL: SYSTEMDIR:Classes SYSTEMDIR:Temp/_Backup/Classes ALL CLONE
+  Copy >NIL: SYSTEMDIR:L SYSTEMDIR:Temp/_Backup/L ALL CLONE
+  Copy >NIL: SYSTEMDIR:Devs SYSTEMDIR:Temp/_Backup/Devs ALL CLONE
+  Copy >NIL: SYSTEMDIR:Libs SYSTEMDIR:Temp/_Backup/Libs ALL CLONE 
+
+  ; extract classicwb os39 excluding files conflicting with amiga os 3.2, 3.1.4 and 3.1
   unzip -qq -o -x PACKAGEDIR:classicwb_os39_v28.zip -d SYSTEMDIR: -x *LoadModule *SetPatch *FastFileSystem *68040.library *lowlevel.library
 
-  ; restore wb startup sequence
-  Copy >NIL: SYSTEMDIR:S/Startup-Sequence.WB SYSTEMDIR:S/Startup-Sequence
+  ; restore amiga os files
+  Copy >NIL: SYSTEMDIR:Temp/_Backup/#? SYSTEMDIR: ALL CLONE
+  Delete >NIL: SYSTEMDIR:Temp/_Backup ALL
 
-  ; delete icons for programs not present with amiga os 3.2 and 3.1.4
+  ; delete icons for programs not present with amiga os 3.2 and 3.1.4, 3.1
   Delete >NIL: SYSTEMDIR:WBStartup/AmiDock.info
   Delete >NIL: SYSTEMDIR:WBStartup/ASyncWB.info
   Delete >NIL: SYSTEMDIR:WBStartup/BenchTrash.info
@@ -133,89 +161,124 @@ IF NOT "$amigaosversion" EQ "3.1"
   Copy >NIL: "SYSTEMDIR:Temp/MUI/MUI/#?" "SYSTEMDIR:System/MUI/" CLONE ALL
   Delete >NIL: "SYSTEMDIR:Temp/MUI/" ALL
 
-  ; copy amiga os 3.2 and 3.1.4 patches to systemdir
+  ; copy amiga os 3.2, 3.1.4 and 3.1 patches to systemdir
   Copy >NIL: PACKAGEDIR:Patches/SystemDir/#? SYSTEMDIR: ALL
 
-  ; add boot menu and wbstartup to startup sequence after "CPU CHECKINSTALL", if not present
-  Search >NIL: SYSTEMDIR:S/Startup-Sequence "S:Bootmenu-Sequence" quiet
-  IF NOT $RC EQ 0 VAL
-    Edit SYSTEMDIR:S/Startup-Sequence OPT P70 with PACKAGEDIR:Patches/Add-BootMenu-WBStartup.edit
-  ENDIF
- 
-  ; add visual prefs to startup sequence after "AddDataTypes", if not present
-  Search >NIL: SYSTEMDIR:S/Startup-Sequence "VisualPrefs" quiet
-  IF NOT $RC EQ 0 VAL
-    Edit SYSTEMDIR:S/Startup-Sequence OPT P70 with PACKAGEDIR:Patches/Add-VisualPrefs.edit
+  ; copy amiga os 3.1 patches to systemdir, if amiga os 3.1
+  IF "$amigaosversion" EQ "3.1"
+    Copy >NIL: PACKAGEDIR:Patches/Amiga-OS-3.1/#? SYSTEMDIR: ALL
   ENDIF
 
-  ; add full palette to startup sequence after "ConClip", if not present
-  Search >NIL: SYSTEMDIR:S/Startup-Sequence "FPPrefs" quiet
-  IF NOT $RC EQ 0 VAL
-    Edit SYSTEMDIR:S/Startup-Sequence OPT P70 with PACKAGEDIR:Patches/Add-FPPrefs.edit
-  ENDIF
-
-  ; create backup of os39 user startup
-  Copy >NIL: SYSTEMDIR:S/User-Startup SYSTEMDIR:S/User-Startup.OS39
-
-  ; restore wb user startup or create user startup, if it doesn't exist
-  IF EXISTS SYSTEMDIR:S/User-Startup.WB
-    Copy >NIL: SYSTEMDIR:S/User-Startup.WB SYSTEMDIR:S/User-Startup
-  ELSE
-    Echo "" NOLINE >SYSTEMDIR:S/User-Startup
-  ENDIF
-
-  ; add anticlick to user startup, if not present
-  Search >NIL: SYSTEMDIR:S/User-Startup "AntiClick" quiet
-  IF NOT $RC EQ 0 VAL
-    Type PACKAGEDIR:Patches/User-Startup-AntiClick >>SYSTEMDIR:S/User-Startup
-  ENDIF
-
-  ; add assigns to user startup, if not present
-  Search >NIL: SYSTEMDIR:S/User-Startup "Assign-Startup" quiet
-  IF NOT $RC EQ 0 VAL
-    Type PACKAGEDIR:Patches/User-Startup-Assigns >>SYSTEMDIR:S/User-Startup
-  ENDIF
-
-  ; add mui to user startup, if not present
-  Search >NIL: SYSTEMDIR:S/User-Startup "MUI" quiet
-  IF NOT $RC EQ 0 VAL
-    Type PACKAGEDIR:Patches/User-Startup-MUI >>SYSTEMDIR:S/User-Startup
-  ENDIF
-
-  ; add xfd to user startup, if not present
-  Search >NIL: SYSTEMDIR:S/User-Startup "xfd" quiet
-  IF NOT $RC EQ 0 VAL
-    Type PACKAGEDIR:Patches/User-Startup-Xfd >>SYSTEMDIR:S/User-Startup
-  ENDIF
-
+  ; delete pipe dosdrivers, if amiga os 3.2
   IF "$amigaosversion" EQ "3.2"
     Delete >NIL: SYSTEMDIR:Devs/DOSDrivers/PIPE#?
 
-    ; copy startup-sequence for amiga os 3.2
-    Copy >NIL: PACKAGEDIR:Patches/Startup-Sequence.3.2 SYSTEMDIR:S/Startup-Sequence.OS39
-  ELSE
-    IF "$amigaosversion" EQ "3.1.4"
-      ; copy startup-sequence for amiga os 3.1.4
-      Copy >NIL: PACKAGEDIR:Patches/Startup-Sequence.3.1.4 SYSTEMDIR:S/Startup-Sequence.OS39
-
-      ; add kingcon to user startup, if not present
-      Search >NIL: SYSTEMDIR:S/User-Startup "KingCON" quiet
-      IF NOT $RC EQ 0 VAL
-        Type PACKAGEDIR:Patches/User-Startup-KingCON >>SYSTEMDIR:S/User-Startup
-      ENDIF
-
-      ; install patch amiga os 3.1.4.1, if it exists
-      IF EXISTS "SYSTEMDIR:S/Install-Patch-Amiga-OS-3141"
-        Execute "SYSTEMDIR:S/Install-Patch-Amiga-OS-3141" SYS SYSTEMDIR QUIET
-      ENDIF
-    ENDIF
   ENDIF
 ELSE
   ; extract classicwb os39
   unzip -qq -o -x PACKAGEDIR:classicwb_os39_v28.zip -d SYSTEMDIR:
+ENDIF
 
-  ; copy startup-sequence for amiga os 3.9
-  Copy >NIL: PACKAGEDIR:Patches/Startup-Sequence.3.9 SYSTEMDIR:S/Startup-Sequence
+; disable newicons, if amiga os is not 3.1
+If Not "$amigaosversion" EQ "3.1"
+  If Exists SYSTEMDIR:C/NewIcons
+    Rename >NIL: SYSTEMDIR:C/NewIcons SYSTEMDIR:C/NewIcons_disabled
+  EndIf
+EndIf
+
+; backup classicwb os39 startup sequence
+Copy >NIL: SYSTEMDIR:T/Science SYSTEMDIR:S/Startup-Sequence.CWB
+Delete >NIL: SYSTEMDIR:T/Science
+
+; backup classicwb os39 user startup
+Copy >NIL: SYSTEMDIR:S/User-Startup SYSTEMDIR:S/User-Startup.CWB
+
+; restore startup sequence
+Copy >NIL: SYSTEMDIR:S/Startup-Sequence.BAK SYSTEMDIR:S/Startup-Sequence
+
+; restore user startup, if it exists. otherwise create empty user startup
+If Exists SYSTEMDIR:S/User-Startup.BAK
+  Copy >NIL: SYSTEMDIR:S/User-Startup.BAK SYSTEMDIR:S/User-Startup
+Else
+  Echo "" NOLINE >SYSTEMDIR:S/User-Startup
+EndIf
+
+; copy classicwb patches to systemdir
+Copy >NIL: PACKAGEDIR:Patches/ClassicWB/#? SYSTEMDIR: ALL CLONE
+
+; create boot startup, if it doesn't exist
+If Not Exists SYSTEMDIR:S/Boot-Startup
+  Echo "" NOLINE >SYSTEMDIR:S/Boot-Startup
+EndIf
+
+; add iconlib startup, if amiga os 3.1
+IF "$amigaosversion" EQ "3.1"
+  ; add iconlib startup to boot startup, if not present
+  Search >NIL: SYSTEMDIR:S/Boot-Startup "Execute S:IconLib-Startup" quiet
+  IF NOT $RC EQ 0 VAL
+    Type PACKAGEDIR:Patches/Add-IconLib-Startup >>SYSTEMDIR:S/Boot-Startup
+  ENDIF
+ENDIF
+
+; find set patch in startup sequence
+Search SYSTEMDIR:S/Startup-Sequence "SetPatch" NONUM >T:_setpatch1
+IF $RC EQ 0 VAL
+  ; add boot startup to startup sequence after "SetPatch", if not present 
+  Search >NIL: SYSTEMDIR:S/Startup-Sequence "Execute S:Boot-Startup" quiet
+  IF NOT $RC EQ 0 VAL
+    ; get found set patch text
+    sed "1q;d" T:_setpatch1 >T:_setpatch2
+    set setpatch `type T:_setpatch2`
+
+    rep SYSTEMDIR:S/Startup-Sequence "$setpatch" "If Exists S:Boot-Startup*N  Execute S:Boot-Startup*NEndIf*N$setpatch"
+  ENDIF
+
+  ; disable startup sequence setpatch for amiga os 3.9
+  IF "$amigaosversion" EQ "3.9"
+      rep SYSTEMDIR:S/Startup-Sequence "$setpatch" ";$setpatch"
+  ENDIF
+ELSE
+  echo "*e[1mError: Unable to add boot startup,*N'SetPatch'*Nnot found in startup sequence.*NBoot startup can't be installed without this!*e[0m"
+  ask "Press ENTER to continue"
+ENDIF
+Delete >NIL: T:_setpatch#?
+
+IF "$amigaosversion" EQ "3.9"
+  ; add setpatch startup to boot startup, if not present
+  Search >NIL: SYSTEMDIR:S/Boot-Startup "Execute S:SetPatch-Startup" quiet
+  IF NOT $RC EQ 0 VAL
+    Type PACKAGEDIR:Patches/Add-SetPatch-Startup >>SYSTEMDIR:S/Boot-Startup
+  ENDIF
+EndIf
+
+; add boot menu startup to startup sequence after "S:Boot-Startup", if not present
+Search >NIL: SYSTEMDIR:S/Startup-Sequence "S:BootMenu-Startup" quiet
+IF NOT $RC EQ 0 VAL
+  rep SYSTEMDIR:S/Startup-Sequence "Execute S:Boot-Startup" "Execute S:Boot-Startup*NEndIf*NIF EXISTS S:BootMenu-Startup*N  Execute S:BootMenu-Startup"
+ENDIF
+
+; find bind drivers in startup sequence
+Search SYSTEMDIR:S/Startup-Sequence "BindDrivers" NONUM >T:_binddrivers1
+IF $RC EQ 0 VAL
+  ; add boot patches startup to startup sequence after "BindDrivers", if not present
+  Search >NIL: SYSTEMDIR:S/Startup-Sequence "S:BootPatches-Startup" quiet
+  IF NOT $RC EQ 0 VAL
+    ; get found binddrivers text
+    sed "1q;d" T:_binddrivers1 >T:_binddrivers2
+    set binddrivers `sed "1q;d" T:_binddrivers2`
+
+    rep SYSTEMDIR:S/Startup-Sequence "$binddrivers" "IF EXISTS S:BootPatches-Startup*N  Execute S:BootPatches-Startup*NEndIf*N$binddrivers"
+  ENDIF
+ELSE
+  echo "*e[1mError: Unable to add boot patches startup,*N'BindDrivers'*Nnot found in startup sequence.*NBoot patches startup can't be installed without this!*e[0m"
+  ask "Press ENTER to continue"
+ENDIF
+Delete >NIL: T:_binddrivers#?
+
+; add workbench patches startup to user startup, if not present
+Search >NIL: SYSTEMDIR:S/User-Startup "Execute S:WorkbenchPatches-Startup" quiet
+IF NOT $RC EQ 0 VAL
+  Type PACKAGEDIR:Patches/Add-WorkbenchPatches >>SYSTEMDIR:S/User-Startup
 ENDIF
 
 ; set harddisk icon
@@ -243,10 +306,6 @@ IF NOT "$harddiskicon" EQ ""
   ENDIF
 ENDIF
 
-; Copy scsi device
-IF EXISTS DEVS:scsi.device
-  COPY >NIL: DEVS:scsi.device SYSTEMDIR:Devs
-ENDIF
 
 ;execute DH1:s/Activate
 assign FONTS: SYSTEMDIR:Fonts
@@ -254,8 +313,6 @@ protect FONTS:#? +RWED ALL QUIET
 SYSTEMDIR:System/FixFonts
 assign FONTS: SYS:Fonts
 delete >NIL: SYSTEMDIR:s/Activate
-
-delete >NIL: SYSTEMDIR:t/Science
 
 delete >NIL: SYSTEMDIR:.backdrop
 rename >NIL: SYSTEMDIR:.backdropT SYSTEMDIR:.backdrop
@@ -496,8 +553,8 @@ LAB REGEN
 
 LAB COPPER
 
-; disable copper, border blank, stack attack and skip to anticlick, if amiga os is not 3.1
-IF NOT "$amigaosversion" EQ "3.1"
+; disable copper, border blank, stack attack and skip to anticlick, if amiga os is not 3.9
+IF NOT "$amigaosversion" EQ "3.9"
   delete >NIL: SYSTEMDIR:Temp/Copper_enable
   delete >NIL: SYSTEMDIR:Temp/BorderBlank_enable
   delete >NIL: SYSTEMDIR:Temp/StackAttack_enable
@@ -613,8 +670,8 @@ LAB DISABLE
 
 LAB STACK
 
-; disable stack attack and skip to anticlick, if amiga os is not 3.1
-IF NOT "$amigaosversion" EQ "3.1"
+; disable stack attack and skip to anticlick, if amiga os is not 3.9
+IF NOT "$amigaosversion" EQ "3.9"
   delete >NIL: SYSTEMDIR:Temp/StackAttack_enable
   SKIP ANTICLICK
 ENDIF
@@ -727,8 +784,8 @@ LAB DISABLE
   
 LAB CYBERBUG
 
-; disable cyberbug fix and skip to freewheel, if amiga os is not 3.1
-IF NOT "$amigaosversion" EQ "3.1"
+; disable cyberbug fix and skip to freewheel, if amiga os is not 3.9
+IF NOT "$amigaosversion" EQ "3.9"
   delete >NIL: SYSTEMDIR:Temp/CyberBugFix_disable
   SKIP FREEWHEEL
 ENDIF
@@ -838,8 +895,8 @@ LAB DISABLE
 
 LAB MYCLOCK
 
-; disable MyClock and skip to complete, if amiga os is not 3.1
-IF NOT "$amigaosversion" EQ "3.1"
+; disable MyClock and skip to complete, if amiga os is not 3.9
+IF NOT "$amigaosversion" EQ "3.9"
   IF EXISTS SYSTEMDIR:Temp/MyClock_disable
     execute PACKAGEDIR:Temp/MyClock_disable
     delete >NIL: SYSTEMDIR:Temp/MyClock_disable

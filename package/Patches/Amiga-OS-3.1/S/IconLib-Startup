@@ -1,0 +1,19 @@
+; IconLib Startup
+; ---------------
+; Author: Henrik Noerfjand Stengaard
+; Date:   2021-12-15
+
+; skip to end, if icon library is version 47 or greater
+Version >NIL: icon.library 47
+If $RC EQ 0 VAL
+  SKIP end
+EndIf
+
+; load icon library, if it exists
+If Exists LIBS:icon.library
+  LoadResident >NIL: LIBS:icon.library REBOOT
+EndIf
+
+; end
+; ---
+LAB end

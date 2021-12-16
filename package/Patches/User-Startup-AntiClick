@@ -1,3 +1,0 @@
-IF EXISTS C:AntiClick
-  C:AntiClick
-EndIF

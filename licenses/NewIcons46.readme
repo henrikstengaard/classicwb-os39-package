@@ -1,0 +1,357 @@
+Short:        The Ultimate GUI Enhancement System, V4.6!
+Author:       Eric Sauvageau <merlin@linux.tc3net.com>, Phil Vedovatti <vedovatt@u.washington.edu>
+Uploader:     vedovatt u washington edu
+Type:         util/wb
+Replaces:     util/wb/NewIconsV41.lha
+Architecture: m68k-amigaos
+
+
+ NewIcons is a revolutionary system patch which enhances your Workbench
+ and gives the user much more power and configurability over the
+ appearance of the GUI (Graphical User Interface).  The NewIcons
+ system works transparently, and provides for a standard icon system
+ that will look the same on any system, no matter what the palette is
+ set to.
+
+ DefIcons complements the Newicons system.  It works by
+ recognizing a file's type, and instantly displaying the appropriate
+ icon image for files without icons attached to them.
+
+
+ The system's features include:
+
+ · Allows up to 256 color icons on an AGA machine. (!)
+
+ · Icon colors are color correct on an AGA system, no matter what your
+   palette is set to.  They automatically appear in perfect color.
+
+ · Default icons for dozens of file types automatically appear for
+   files without icons (FAST!).  Recognizes file types in a very
+   efficient manner.  If you click on a "fake" icon, your appropriate
+   user-defined default tool will appear in the "Execute command" text
+   field automatically!
+
+ · Make a brush, convert it to an icon.  It will appear on your workbench
+   in the _exact_ proper colors you created it in, no matter what your
+   palette is set to.  Imagine making gorgeous icons from your digitized
+   pics, in _more_ than 32 colors!
+
+ · Icon images are compressed to maximize disk space.  They are
+   uncompressed faster than you can say "NewIcons"!
+
+ · Also KS 2.04 compatible (16 color icon limitation).
+
+ · Fix that ugly Cross-DOS icon to look like a standard NewIcon.
+
+ · Unique icons for RAM-Disks and CD-ROM's that don't have icons.
+
+ · A complete set of beautiful, standardized Workbench icons, drawn by
+   Phil Vedovatti.  Hundreds of icons are also available separately on
+   Aminet, some with a totally different style.
+
+ · Comprehensive set of utilities to allow you to manipulate your
+   NewIcons.
+
+ · Totaly FREE!  Why would anyone want to pay cash for icons?
+
+ · Dithering of icon images is selectable for users with fewer available
+   Workbench colors.  This is turned off by default.
+
+ · Icons can be given a single tooltype, which will tell NewIcons to display
+   a NewIcon image from elsewhere on the system.  This feature
+   has some caveats, but introduces a huge number of neat possibilities
+   for configuring your Workbench, and saves on disk space and chip RAM.
+   Imagine having your Workbench icons appear randomly different on EACH
+   reboot!
+
+ · The source for deficons.prefs has been included, so any enterprising
+   programmer can add their own file identification types to the system!
+
+ · User configurable, GUI enhanced Preferences program to configure all
+   attributes of the NewIcons system (dither, pen precision, etc.)
+
+ · The NewIcons patch is a commodity, which can be enabled and disabled
+   on the fly, using Commodities Exchange.
+
+ · RTG (ReTargetable Graphics) mode, which allows graphics card users
+   to store icon data in fast RAM instead of chip RAM.  This has the
+   advantage of saving your valuable chip RAM for other uses, and speeds
+   up rendering of icons on the Workbench.
+
+ · Border removal option!  Remember the Kickstart 1.3 days when there
+   were no gray border boxes around the icons?  This new option removes
+   those silly looking boxes once again, and is user configurable.
+
+ · The system library is available in different versions, to ensure the
+   best speed possible on every system configuration.
+
+ · NEW IN V4: Dragged icons can also be optionally made transparent.
+
+ · NEW IN V4: The text shown under the icons can be optionally rendered
+   with a 3D or an outlined look.
+
+ · NEW IN V4: New utilities to make updating whole
+   drawers or partitions with a specified drawer image, and a popup
+   menu utility that displays icon images in a menu format -- could even
+   be used as a program dock launcher with the appropriate scripts.
+
+ · NEW IN V4:  New 32 color icon set.  NewIcons is now sufficiently faster
+   to allow fast rendering of higher bitplane icons.
+
+
+Version History:
+
+V1.0:
+=====
+Original public release.
+
+V2.0:
+=====
+In the previous version of the docs I forgot to mention that the chunky to
+planar routine was based on a routine by Chris Green (who based his routine on
+one by Richard Addison).
+
+fixed bug in DefIcons, was causing "please insert volume dir c" after doing
+execute command - dir c:
+
+fixed bug in DefIcons, would hang if it couldn't find deficons.prefs
+
+fixed bug in DefIcons, was causing a disk icon to appear for files called
+"disk".
+
+fixed bug in DefIcons, would show a drawer as disk icon for disks containing a
+directory called "disk" (which is a bad idea anyway).
+
+The GetDiskObjectNew() patch now returns NULL if the given name doesn't exist
+(like the standard function)
+
+now does dithering (optional)
+
+some file types added to deficons.prefs.
+
+bug fix: createdefaulticon now preserves the tooltypes of tool icons and of
+project icons whose default icon have no default tool.
+
+bug fix: newicons would check the argarray after FreeArgs(). Thanks to Nicola
+Soggia for discovering it and not reporting it. Thanks to Moreno Magnani who
+did report it.
+
+bugfix, arj files were not recognized
+
+bug fix: DefIcons now uses Stricmp() to avoid problems with international
+sorting
+
+DEFAULTIMAGE special ToolType added
+
+Fixed installer: no longer copies over the original def_#? icons in
+Envarc:sys. It now just copies them to a safe place.
+
+Localized installer and documentation files added
+
+Replaced "ReplaceImage" utility with "KillOldIcon", since ReplaceImage
+required NewIcons not to be running to use.
+
+Changed a few of the icons from the original distribution archive
+
+
+
+CHANGES since last version from Nicola (Release 2, V38.3)
+=========================================================
+
+3.0:
+====
+
+ - Development is now done by Phil Vedovatti and Eric Sauvageau.
+
+
+ - A much requested feature: you can now have borderless icons on your
+   Workbench, just like under Kickstart 1.x :)  Note that it is really a
+   hack, so it _might_ break under future versions of Workbench, and it
+   has some minor drawbacks.  Make sure you read the NewIconsPrefs section
+   about it before enabling it.
+
+ - New RTG Mode which uses Fast RAM instead of Chip on systems with graphics
+   cards.
+
+ - Library (V39.1) now comes in two versions:
+
+      o 68020 and up, OS 3.x (Required for RTG Mode)
+      o 68000, OS 2.x
+
+   The library base has also changed, so application programmers
+   should check the updated libraries/newicon.h include file.  Note
+   that things are still fully backward compatible).
+
+   Various speed optimisations have been done, and the tooltype
+   decoding routine has been rewritten by Børge Nøst.  We're hoping to
+   also have the C2P routine rewritten in a future version :)
+
+
+ - NewIcons has been rewritten in E, and is now a commodity which can be
+   enabled/disabled.  The hotkey will let you see some information about
+   the current settings, and allow you to directly launch the external
+   preferences editor.
+
+
+ - NewIcons will no longer auto-detach from the CLI so it must be
+   Run <>NIL:.  It also has a totaly new template:
+
+        'CX_PRIORITY/N/K,CX_POPKEY/K,PE=PREFSEDITOR/K'
+
+   Hopefully NewIcons will auto-detach again in a future version.
+
+ - The former Newicons settings have been moved to a separate prefs editor.
+   Makes it easier for the user to install/configure, and gives you more
+   freedom to experiment with the various settings without needing to
+   reboot.
+
+   This editor uses the ClassAct BOOPSI package for its GUI (all the
+   required classes are included in this archive.)
+
+
+ - Added a "kludge" so that icons used by ToolManager docks get properly
+   remapped on screenmode changes.
+
+
+3.1:
+====
+
+ - Fixed a bug in the PutIcon() patch that caused various problems with
+   some programs such as SwazInfo or DOpus.
+
+ - Added Autodocs for newicon.library, allowing third party developers to
+   directly support NewIcons through the library.
+
+
+
+4.1:
+====
+
+ - New official WWW support site:  http://www.amiganet.org/NewIcons/
+
+ - Improved installation procedure.
+
+ - Extended the standard 14-colors palette to 32-colors.
+
+ - Complete new 32-colors iconset included.  People who prefer the older
+   ones for speed or resources issues can still use them.
+
+ - Library (V40.1) now comes in three flavours:
+
+      ° Low-End, for 68000 and OS 2.04 users and up.
+      ° Middle-End, for 68020 and 3.0 users and up.
+      ° High-End, for 68020 and 3.0 users and up, without the dither
+        option and with RTG Mode support.
+
+ - New library call: GetDefNewDiskObject(objtype).
+
+ - Preferences are now loaded in the library init code instead of in the
+   NewIcons executable, allowing easier use of the library without the
+   main executable.
+
+ - Made Transparent and NoBorder options separate.
+
+ - Added Transparent Dragging option.
+
+ - Added Outlined/Shadowed icontext option.
+
+ - Rewrote the NoBorder/Transparent patches, made them cleaner.
+
+ - Changed the preferences file format.  The new format is now documented
+   in the Includes.
+
+ - The preferences editor is now able to detect what features are
+   available in the installed library, and will display the library
+   version in the About requester.
+
+ - Added ShowNI, a CLI-based NewIcons viewer/selector.
+
+ - Added UpdateDrawers, a new tool that will allow you to recursively
+   replace all drawer icons within a given path.
+
+ - All Workbench-based tools will allow you to select the arguments
+   through filerequesters if launched from Workbench without any argument.
+
+ - CopyNewIcon will report if it can't write the destination icon.
+
+ - Updated InjectBrush to support the new 32-colors palette.
+
+ - Updated the DefIcons brainfile, added various new filetypes.
+
+ - DefIcons now uses utility.library's Stricmp() instead of SAS/C's own
+   routine.  Should fix the problems experimented by some persons using a
+   localized Workbench.
+
+ - A lot of code optimization, resulting in general speed improvements.
+
+ - Recompiled the libraries and the utilities with SAS/C 6.57, and
+   optimized the 020+ libraries for 68060 users.
+
+
+
+4.5:
+====
+
+NewIcons:
+---------
+
+ - This version prevents crashes occuring if the user would
+   change screenmode while an icon with DEFAULTIMAGE was displayed.
+   Sadly I can't solve the problem itself, as it's a side-effect of the
+   very idea of DEFAULTIMAGE (it's been there since Nicola's days).  I did
+   the best I could do, which was to at least prevent it from crasing
+   (I simply no longer remap those icons).
+
+ - Eliminated the crawling ants artifacts
+
+ - Now requires Kickstart 3.0.  2.04 users: this is your wake-up call.
+
+ - Various changes to the No Border and Text Outline patches, speeding
+   them up a bit.
+
+ - An Enforcer would happen if an icon was loaded while no screen was
+   open (i.e. before WB and any bootpic screen would open).  This one
+   should be fixed now.
+
+NewIconsPrefs:
+--------------
+ - Bumped from 40.3 to 40.5
+ - Updated About to reflect V4.5
+
+
+CreateDefaultIcon:
+------------------
+ - removed a debugging KPrintf() I had forgotten.
+
+
+4.6:
+====
+
+NewIcons:
+---------
+ - eliminated Cyberguard/Enforcer hits.
+
+NewIconsPrefs:
+--------------
+ - fixed a small recoverable alert which could occur if certain
+   Class Act gadgets were missing.
+
+InjectBrush:
+------------
+ - The wrong version was supplied with NewIcons 4.5, which contained
+   some beta code.  Use the version supplied here instead.
+
+
+
+
+
+ See the enclosed documentation for more information, and visit the
+ official NewIcons Web Page at:
+
+--------------------------------------------------------------------------
+
+
+                 http://www.amiganet.org/NewIcons/
+
+
+--------------------------------------------------------------------------

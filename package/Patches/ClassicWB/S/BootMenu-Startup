@@ -1,6 +1,3 @@
-F/CPU CHECKINSTALL/; I
-
-FailAt 21
 C:GetMouseInput LOCAL
 
 IF $MouseInput EQ 1
@@ -19,10 +16,14 @@ EndIF
 
 Unset MouseInput
 
+IF EXISTS C:StackAttack
+  C:StackAttack
+EndIF
+
+C:Version >NIL:
+FailAt 21
+
 IF EXISTS SYS:WBstartupD
   C:Rename >NIL: SYS:WBStartup SYS:WBStartupM
   C:Rename >NIL: SYS:WBStartupD SYS:WBStartup
 EndIF
-
-Z
-; W

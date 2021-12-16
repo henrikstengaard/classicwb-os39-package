@@ -1,0 +1,22 @@
+;Start OS3.9 Checks
+IF EXISTS C:SquirrelSCSI
+    C:SquirrelSCSI
+EndIF
+Set SCSIUpdate 1
+IF EXISTS C:IDEFix
+    C:IDEFix
+    Set SCSIUpdate 0
+EndIF
+IF EXISTS SYS:Expansion/XSurfIDE
+    Set SCSIUpdate 0
+EndIF
+IF EXISTS SYS:Prefs/Env-Archive/NOSCSIUPDATE
+    Set SCSIUpdate 0
+EndIf
+IF $SCSIUpdate EQ 1
+    C:SetPatch QUIET
+ELSE
+    C:SetPatch SKIPROMUPDATES "scsi.device" QUIET
+EndIF
+Unset SCSIUpdate
+;End OS3.9 Check

@@ -1,0 +1,72 @@
+;ClassicWB User-Startup
+;----------------------
+;OS39
+
+IF EXISTS C:NewIcons
+  Run >NIL: C:NewIcons
+EndIF
+
+IF EXISTS SYS:System/FPalette/FPPrefs
+  SYS:System/FPalette/FPPrefs
+EndIF
+
+FailAt 21
+SYS:System/Rexxmast >NIL:
+
+IF EXISTS C:AntiClick
+  C:AntiClick
+EndIF
+
+Execute S:Assign-Startup
+
+Assign >NIL: LAUNCH: SYS:System/BMenu/Files
+Assign >NIL: VMEM: SYS:T
+Assign >NIL: AWEB_APL: SYS:Internet/AWeb_APL
+ 
+IF Not Exists RAM:Disk.info
+  C:Copy >NIL: S:Ram.info RAM:Disk.info
+EndIF
+
+IF Exists C:RamSnap
+  Run >NIL C:RamSnap
+EndIF
+
+;BEGIN MUI
+IF EXISTS SYS:System/MUI
+   Assign >NIL: MUI: SYS:System/MUI
+   IF EXISTS MUI:Libs
+      Assign >NIL: ADD LIBS: MUI:Libs
+   EndIF
+   IF EXISTS MUI:Locale
+      Assign >NIL: ADD LOCALE: MUI:Locale
+   EndIF
+   C:Version >NIL: exec.library 39
+   IF NOT WARN
+      IF EXISTS MUI:Docs
+         IF EXISTS HELP:dummy
+         EndIF
+         Assign >NIL: ADD HELP: MUI:Docs
+      EndIF
+   EndIF
+EndIF
+;END MUI
+
+C:xfdPatch >NIL:
+
+Run >NIL: C:XpkMasterPrefs
+
+If Exists C:CAPrefs
+  C:CAPrefs >NIL: 
+EndIF
+
+IF EXISTS C:BorderBlank
+  C:BorderBlank
+EndIF
+
+IF EXISTS C:StackAttack
+  C:StackAttack AUTO
+EndIF
+
+If Exists S:KingCON-Startup
+  Execute S:KingCON-Startup
+EndIF
